@@ -42,7 +42,7 @@ npm start
 - public: `/auth/login`, `/auth/register`, `/auth/activate`
 - protected: `/users`
 
-# Import dummy users
+# Import mock users
 ```
 mongoimport --db heroes-db --collection users --file users.json --jsonArray
 ```
