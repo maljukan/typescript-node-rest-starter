@@ -38,7 +38,7 @@ class AuthController {
             role: user.role,
             username: user.username
           }, process.env.JWT_SECRET, {expiresIn: '1h'});
-          return resp.status(200).send(token);
+          return resp.status(200).send({token: token});
         } else {
           return resp.status(401).send({
             msg: 'Unauthorized',
@@ -120,7 +120,7 @@ class AuthController {
           subject: 'Account activation',
           text: `You are receiving this email because you (or someone else) have requested account activation.\n\n
           Please click on the following link, or paste this into your browser to complete the process:\n\n
-          http://${req.headers.host}/activation/${req.body.activationToken}\n\n
+          http://${req.headers.host}/auth/activate/${user.activationToken}\n\n
           If you did not request this, please ignore this email\n`
         };
         transporter.sendMail(mailOptions).then((sentMessage: SentMessageInfo) => {
@@ -145,7 +145,7 @@ class AuthController {
           role: user.role,
           username: user.username
         }, process.env.JWT_SECRET, {expiresIn: '1h'});
-        return res.status(200).send(token);
+        return res.status(200).send({token: token});
       } catch (error) {
         console.log(error);
         res.status(400).send({
