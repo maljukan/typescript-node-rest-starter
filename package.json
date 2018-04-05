@@ -1,10 +1,10 @@
 {
-  "name": "ts-node-rest-starter",
+  "name": "typescipt-node-rest-starter",
   "version": "0.1.0",
   "description": "A starting point for Node.js REST API",
   "repository": {
     "type": "git",
-    "url": "https://github.com/maljukan/ts-node-rest-starter"
+    "url": "https://github.com/maljukan/typescript-node-rest-starter"
   },
   "author": "Nenad Maljukan",
   "license": "MIT",
