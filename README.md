@@ -47,7 +47,7 @@ npm start
 mongoimport --db heroes-db --collection users --file users.json --jsonArray
 ```
 
-#TODO
+# TODO
 - Implement RBAC functionality
 - Integrate Swagger
 - Consider using **Repository pattern** instead of **Active Directory** for handling Mongoose model persistence
