@@ -47,6 +47,11 @@ npm start
 mongoimport --db heroes-db --collection users --file users.json --jsonArray
 ```
 
+#TODO
+- Implement RBAC functionality
+- Integrate Swagger
+- Consider using **Repository pattern** instead of **Active Directory** for handling Mongoose model persistence
+
 # Credits
 The repository is based on [Microsoft/TypeScript-Node-Starter
 ](https://github.com/Microsoft/TypeScript-Node-Starter)
