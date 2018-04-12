@@ -51,6 +51,17 @@ app.use(session({
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 
+app.use(expressJwt({
+  secret: process.env.JWT_SECRET,
+  credentialsRequired: false,
+  requestProperty: 'auth',
+  getToken: function fromHeader(req: express.Request) {
+    if (req.headers.Authorization && (req.headers.Authorization as string).split(' ')[0] === 'Bearer') {
+      return (req.headers.Authorization as string).split(' ')[1];
+    }
+  }
+}));
+
 const router: express.Router = express.Router();
 new AuthController(router);
 new UserController(router);
@@ -62,16 +73,5 @@ app.use((req: express.Request, resp: express.Response) => {
   });
 });
 
-app.use(expressJwt({
-  secret: process.env.JWT_SECRET,
-  credentialsRequired: false,
-  requestProperty: 'auth',
-  getToken: function fromHeader(req: express.Request) {
-    if (req.headers.Authorization && (req.headers.Authorization as string).split(' ')[0] === 'Bearer') {
-      return (req.headers.Authorization as string).split(' ')[1];
-    }
-  }
-})
-  .unless({path: ['/auth/login', '/auth/register', '/auth/activate']}));
 
 module.exports = app;
