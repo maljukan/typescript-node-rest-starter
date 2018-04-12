@@ -42,6 +42,24 @@ npm start
 - public: `/auth/login`, `/auth/register`, `/auth/activate`
 - protected: `/users`
 
+# CURL
+- Register
+```
+curl -d '{"email":"jdoe@example.com", "password":"PASSWORD", "lname": "Doe", "fname": "John", "role": "guest", "username": "jdoe"}' -H "Content-Type: application/json" -X POST http://localhost:3000/auth/register
+```
+- Activation
+```
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:3000/auth/activate/ACTIVATION_TOKEN
+```
+- Login
+```
+curl -i -d '{"email":"jdoe@example.com", "password":"PASSWORD"}' -H "Content-Type: application/json" -X POST http://localhost:3000/auth/login
+```
+- GET /users
+```
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer JWT_TOKEN_HERE" -X GET http://localhost:3000/users/
+```
+
 # Import mock users
 ```
 mongoimport --db heroes-db --collection users --file users.json --jsonArray
