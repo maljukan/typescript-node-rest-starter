@@ -6,7 +6,7 @@ class UserController {
 
   constructor(private router: Router) {
 
-    router.get('/users', expressJwt({secret: process.env.JWT_SECRET}), async (req: Request, resp: Response) => {
+    router.get('/users', async (req: Request, resp: Response) => {
       try {
         const users = await UserModel.find().exec();
         resp.status(200).send(users);

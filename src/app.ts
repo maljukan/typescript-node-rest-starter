@@ -53,7 +53,6 @@ app.use(lusca.xssProtection(true));
 
 app.use(expressJwt({
   secret: process.env.JWT_SECRET,
-  credentialsRequired: false,
   requestProperty: 'auth',
   getToken: function fromHeader(req: express.Request) {
     if (req.headers.Authorization && (req.headers.Authorization as string).split(' ')[0] === 'Bearer') {
