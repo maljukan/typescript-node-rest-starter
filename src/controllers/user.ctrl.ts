@@ -7,7 +7,7 @@ class UserController {
 
     router.get('/users', async (req: Request, resp: Response) => {
       try {
-        const users = UserModel.find().exec();
+        const users = await UserModel.find().exec();
         resp.status(200).send(users);
       } catch (error) {
         resp.send({
