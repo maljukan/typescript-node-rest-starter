@@ -61,6 +61,15 @@ app.use(expressJwt({
   }
 }));
 
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).send({
+      msg: 'Invalid or no token supplied',
+      code: 401
+    });
+  }
+});
+
 const router: express.Router = express.Router();
 new AuthController(router);
 new UserController(router);
