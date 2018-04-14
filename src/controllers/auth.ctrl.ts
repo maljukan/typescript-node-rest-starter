@@ -139,7 +139,7 @@ class AuthController {
 
     router.get('/auth/activate/:activationToken', async (req: Request, res: Response) => {
       try {
-        const user: any = UserModel.findOneAndUpdate({activationToken: req.params.activationToken}, {active: true}, {new: true}).exec();
+        const user: any = await UserModel.findOneAndUpdate({activationToken: req.params.activationToken}, {active: true}, {new: true}).exec();
         const token = jwt.sign({
           email: user.email,
           role: user.role,
