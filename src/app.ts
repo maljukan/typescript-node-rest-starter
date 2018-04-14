@@ -52,14 +52,17 @@ app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 
 app.use(expressJwt({
-  secret: process.env.JWT_SECRET,
-  requestProperty: 'auth',
-  getToken: function fromHeader(req: express.Request) {
-    if (req.headers.Authorization && (req.headers.Authorization as string).split(' ')[0] === 'Bearer') {
-      return (req.headers.Authorization as string).split(' ')[1];
+    secret: process.env.JWT_SECRET,
+    requestProperty: 'auth',
+    getToken: function fromHeader(req: express.Request) {
+      const tokenHeader = req.headers.Authorization || req.headers.authorization;
+      if (tokenHeader && (tokenHeader as string).split(' ')[0] === 'Bearer') {
+        return (tokenHeader as string).split(' ')[1];
+      }
     }
-  }
-}));
+  })
+    .unless({path: [{url: '/', method: 'OPTIONS'}, /\/auth\//g ]})
+);
 
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
@@ -80,6 +83,5 @@ app.use((req: express.Request, resp: express.Response) => {
     msg: 'Not Found!'
   });
 });
-
 
 module.exports = app;

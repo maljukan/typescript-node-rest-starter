@@ -9,7 +9,7 @@
   "author": "Nenad Maljukan",
   "license": "MIT",
   "scripts": {
-    "start": "npm run serve",
+    "start": "npm run build && npm run serve",
     "build": "npm run build-ts && npm run tslint",
     "serve": "node --inspect dist/server.js",
     "watch-node": "nodemon dist/server.js",
