@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { default as UserModel, UserType } from '../model/user';
 import * as jwt from 'jsonwebtoken';
 import * as util from 'util';
 import * as crypto from 'crypto';
 import * as nodemailer from 'nodemailer';
-import { SentMessageInfo } from 'nodemailer';
+import { UserType } from '../types/user';
+import UserService from '../services/user.srvc';
 
 class AuthController {
 
@@ -24,14 +24,14 @@ class AuthController {
         });
       }
       try {
-        const user: any = await UserModel.findOne({email: req.body.email}).exec();
+        const user: UserType = await UserService.findByEmail(req.body.email);
         if (!user) {
           return resp.status(404).send({
             msg: 'User not found',
             code: 404
           });
         }
-        const isSamePass = await (user as UserType).comparePassword(req.body.password, (user.password));
+        const isSamePass = UserService.comparePassword(req.body.password, user.password);
         if (isSamePass) {
           const token = jwt.sign({
             email: user.email,
@@ -72,21 +72,11 @@ class AuthController {
         });
       }
 
-      const user: any = {
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        role: req.body.role,
-        profile: {
-          fname: req.body.fname,
-          lname: req.body.lname,
-          info: req.body.info,
-        }
-      };
+      const user: UserType = req.body;
 
       try {
         // Check if user already exists
-        const existingUser = await UserModel.findOne({$or: [{email: req.body.email}, {username: req.body.username}]}).exec();
+        const existingUser = await UserService.findByUsernameOrEmail(user.username, user.email);
         if (existingUser) {
           return res.status(409).send({
             msg: 'User already exists',
@@ -98,10 +88,6 @@ class AuthController {
         const cryptedValue = await qRandomBytes(16);
         user.activationToken = cryptedValue.toString('hex');
         user.activationExpires = new Date(Date.now() + 3600000); // 1 hour
-        const userDocument = new UserModel(user);
-        // Save new user
-        const savedUser = await userDocument.save();
-        console.log('User saved!', savedUser);
         // Send activation email
         const transporter = nodemailer.createTransport({
           host: process.env.SMTP_HOST,
@@ -115,7 +101,7 @@ class AuthController {
           }
         });
         const mailOptions = {
-          to: req.body.email,
+          to: user.email,
           from: process.env.SMTP_USER,
           subject: 'Account activation',
           text: `You are receiving this email because you (or someone else) have requested account activation.\n\n
@@ -123,23 +109,21 @@ class AuthController {
           http://${req.headers.host}/auth/activate/${user.activationToken}\n\n
           If you did not request this, please ignore this email\n`
         };
-        transporter.sendMail(mailOptions).then((sentMessage: SentMessageInfo) => {
-          res.status(200).send(sentMessage);
-        }, (error) => {
-          console.log(error);
-          return res.status(401).send({
-            msg: error,
-            status: 400
-          });
-        });
+        await transporter.sendMail(mailOptions);
+        const savedUser: UserType = await UserService.save(user);
+        res.status(200).send(savedUser);
       } catch (error) {
-        return next(error);
+        console.log(error);
+        res.status(400).send({
+          msg: 'Unable to send email',
+          status: 400
+        });
       }
     });
 
     router.get('/auth/activate/:activationToken', async (req: Request, res: Response) => {
       try {
-        const user: any = await UserModel.findOneAndUpdate({activationToken: req.params.activationToken}, {active: true}, {new: true}).exec();
+        const user: UserType = await UserService.findOneAndUpdate(req.params.activationToken);
         const token = jwt.sign({
           email: user.email,
           role: user.role,

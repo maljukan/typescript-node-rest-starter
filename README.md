@@ -1,11 +1,13 @@
 # TypeScript REST Node Starter
 
 This repository can be used as a convenient starting point for building
-Node.js REST API's using TypeScript on top of Express web framework.  
+`NODE REST API`'s using `TypeScript` on top of `Express` web framework.  
 
 # Features
  - Basic `JWT` authentication and account activation using `SMTP`
-
+ - Repository pattern used to enable separation of concerns
+ - `MongoDB` - default repository implementation, should be easy to replace
+ 
 # Pre-reqs
 - Install [Node.js](https://nodejs.org/en/)
 - Install [MongoDB](https://docs.mongodb.com/manual/installation/)
@@ -68,7 +70,7 @@ mongoimport --db heroes-db --collection users --file users.json --jsonArray
 # TODO
 - Implement RBAC functionality
 - Integrate Swagger
-- Consider using **Repository pattern** instead of **Active Directory** for handling Mongoose model persistence
+- Test coverage
 
 # Credits
 The repository is based on [Microsoft/TypeScript-Node-Starter

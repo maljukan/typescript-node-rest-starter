@@ -1,6 +1,5 @@
 import { Request, Response, Router } from 'express';
-import UserModel from '../model/user';
-import * as expressJwt from 'express-jwt';
+import UserService from '../services/user.srvc';
 
 class UserController {
 
@@ -8,7 +7,7 @@ class UserController {
 
     router.get('/users', async (req: Request, resp: Response) => {
       try {
-        const users = await UserModel.find().exec();
+        const users = await UserService.findAll();
         resp.status(200).send(users);
       } catch (error) {
         resp.send({
