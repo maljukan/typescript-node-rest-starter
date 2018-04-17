@@ -1,30 +1,5 @@
 import * as mongoose from 'mongoose';
-import { AuthToken } from '../interfaces/auth-token';
-import { Profile } from '../interfaces/profile';
 import * as bcrypt from 'bcrypt-nodejs';
-import * as util from 'util';
-
-export type UserType = mongoose.Document & {
-
-  email: string,
-  username: string,
-  password: string,
-  role: string,
-
-  active: boolean,
-
-  passwordResetToken: string,
-  passwordResetExpires: Date,
-
-  activationToken: string,
-  activationExpires: Date,
-
-  tokens: Array<AuthToken>,
-
-  profile: Profile,
-
-  comparePassword: (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void
-};
 
 const userSchema = new mongoose.Schema({
   email: {type: String, unique: true},
@@ -69,10 +44,5 @@ userSchema.pre('save', function save(next) {
   });
 });
 
-userSchema.methods.comparePassword = function (candidatePassword: string) {
-  const qCompare = (util as any).promisify(bcrypt.compare);
-  return qCompare(candidatePassword, this.password);
-};
-
-const UserModel = mongoose.model('User', userSchema);
-export default UserModel;
+const UserRepository = mongoose.model('User', userSchema);
+export default UserRepository;
