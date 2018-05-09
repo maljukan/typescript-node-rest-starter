@@ -76,7 +76,7 @@ mongoimport --db heroes-db --collection users --file users.json --jsonArray
 
 # TODO
 - Implement RBAC functionality
-- Integrate Swagger
+- ~~Integrate Swagger~~
 - Test coverage
 
 # Credits
