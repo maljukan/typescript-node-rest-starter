@@ -1,7 +1,7 @@
-import { default as UserRepository } from '../repositories/user.repo';
-import { UserType } from '../types/user';
+import { User } from '../models/user';
 import * as bcrypt from 'bcrypt-nodejs';
 import * as util from 'util';
+import UserRepository, { UserType } from '../schemas/user.schema';
 
 /**
  * @class UserService
@@ -11,46 +11,49 @@ class UserService {
   /**
    * @description Fetches single user from the storage by email
    * @param email
-   * @returns {Promise<UserType>}
+   * @returns {Promise<User>}
    */
-  async findByEmail(email): Promise<UserType> {
-    return await UserRepository.findOne({email: email}).lean().exec() as UserType;
+  async findByEmail(email): Promise<User> {
+    const user: UserType = await UserRepository.findOne({email: email});
+    return user;
   }
 
   /**
    * @description Fetches single user from the storage by email or username
    * @param username
    * @param email
-   * @returns {Promise<UserType>}
+   * @returns {Promise<User>}
    */
-  async findByUsernameOrEmail(username, email): Promise<UserType> {
-    return await UserRepository.findOne({$or: [{email: email}, {username: username}]}).lean().exec() as UserType;
+  async findByUsernameOrEmail(username, email): Promise<User> {
+    const user: User = await UserRepository.findOne({$or: [{email: email}, {username: username}]});
+    return user;
   }
 
   /**
    * @description Saves the user in the storage
-   * @param {UserType} user
-   * @returns {Promise<UserType>}
+   * @param {User} user
+   * @returns {Promise<User>}
    */
-  async save(user: UserType): Promise<UserType> {
-    return (await new UserRepository(user).save()).toObject();
+  async save(user: User): Promise<User> {
+    return (await new UserRepository(user).save()).toObject({ virtuals: true });
   }
 
   /**
    * @description Fetches single user by activationToken and sets active flag
    * @param activationToken
-   * @returns {Promise<UserType>}
+   * @returns {Promise<User>}
    */
-  async findOneAndUpdate(activationToken): Promise<UserType> {
-    return await UserRepository.findOneAndUpdate({activationToken: activationToken}, {active: true}, {new: true}).lean().exec() as UserType;
+  async findOneAndUpdate(activationToken): Promise<User> {
+    const user: User = await UserRepository.findOneAndUpdate({activationToken: activationToken}, {active: true}, {new: true});
+    return user;
   }
 
   /**
    * @description Fetches all users from the storage
-   * @returns {Promise<UserType[]>}
+   * @returns {Promise<User[]>}
    */
-  async findAll(): Promise<UserType[]> {
-    return (await UserRepository.find().lean().exec()) as UserType[];
+  async findAll(): Promise<User[]> {
+    return await UserRepository.find() as User[];
   }
 
   /**

@@ -12,8 +12,7 @@ import * as bluebird from 'bluebird';
 import * as expressJwt from 'express-jwt';
 import * as swaggerUI from 'swagger-ui-express';
 import * as swaggerDocument from '../swagger.json';
-import AuthController from './controllers/auth.ctrl';
-import UserController from './controllers/user.ctrl';
+import { AuthRouter, SwaggerAPIRouter, UserRouter } from './routes';
 
 const MongoStore = mongo(session);
 
@@ -63,7 +62,7 @@ app.use(expressJwt({
       }
     }
   })
-    .unless({path: [ /\/api-docs\//g, {url: '/', method: 'OPTIONS'}, /\/auth\//g ]})
+    .unless({path: [/\/api-docs\//g, {url: '/', method: 'OPTIONS'}, /\/auth\//g]})
 );
 
 app.use(function (err, req, res, next) {
@@ -75,17 +74,14 @@ app.use(function (err, req, res, next) {
   }
 });
 
-const router: express.Router = express.Router();
-new AuthController(router);
-new UserController(router);
-
+app.use('/auth', AuthRouter);
+app.use('/user', UserRouter);
 /**
  * Add swagger endpoints
  */
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-app.use('/api/v1', router);
+app.use('/api/v1', SwaggerAPIRouter);
 
-app.use(router);
 app.use((req: express.Request, resp: express.Response) => {
   resp.status(404).send({
     msg: 'Not Found!'
