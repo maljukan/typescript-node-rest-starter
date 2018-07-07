@@ -75,7 +75,7 @@ app.use(function (err, req, res, next) {
 });
 
 app.use('/auth', AuthRouter);
-app.use('/user', UserRouter);
+app.use('/users', UserRouter);
 /**
  * Add swagger endpoints
  */

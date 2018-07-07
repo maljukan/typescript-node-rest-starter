@@ -87,7 +87,7 @@ class AuthController {
       // Send activation email
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
+        port: Number(process.env.SMTP_PORT),
         secure: true,
         socketTimeout: 5000,
         logger: true,
