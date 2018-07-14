@@ -31,7 +31,7 @@ describe('/auth', () => {
   describe('POST /register', () => {
     const route: string = '/auth/register';
 
-    it('should return 201', (done) => {
+    it('should return 200', (done) => {
       request(app).post(route)
         .send(userForm)
         .then(res => {
