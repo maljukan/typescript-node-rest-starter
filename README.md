@@ -74,6 +74,12 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "Au
 mongoimport --db heroes-db --collection users --file users.json --jsonArray
 ```
 
+# Tests
+* Before running tests be sure to create a real `.env` file in root using the fields found in `.env.example`
+```
+npm run test
+```
+
 # TODO
 - Implement RBAC functionality
 - ~~Integrate Swagger~~
