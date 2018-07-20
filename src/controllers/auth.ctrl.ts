@@ -88,7 +88,7 @@ class AuthController {
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT),
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
         socketTimeout: 5000,
         logger: true,
         auth: {
@@ -96,6 +96,7 @@ class AuthController {
           pass: process.env.SMTP_PASSWORD
         }
       });
+
       const mailOptions = {
         to: user.email,
         from: process.env.SMTP_USER,

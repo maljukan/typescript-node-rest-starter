@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { default as UserService } from '../services/user.srvc';
 
 class UserController {
-
   async getAll(req: Request, resp: Response) {
     try {
       const users = await UserService.findAll();

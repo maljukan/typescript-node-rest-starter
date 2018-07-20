@@ -57,6 +57,14 @@ class UserService {
   }
 
   /**
+   * @description Deletes a single user from storage
+   * @returns {Promise<void>}
+   */
+  async deleteOne(username: string): Promise<void> {
+    return await UserRepository.deleteOne({username: username});
+  }
+
+  /**
    * @description Compares encrypted and decrypted passwords
    * @param {string} candidatePassword
    * @param storedPassword
